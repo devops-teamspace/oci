@@ -1,6 +1,12 @@
 name: 🐝 Manually deploy runners
 
 on:
+  workflow_call:
+    inputs:
+      TARGET_BRANCH:
+        description: "The target branch"
+        default: ""
+        type: string
   workflow_dispatch: # deploy on demand
     inputs:
       target_scale_set:  # name our runner set
@@ -36,6 +42,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.TARGET_BRANCH || '' }}
 
       - name: Write out the kubeconfig info
         run: |

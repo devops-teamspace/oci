@@ -9,7 +9,7 @@ on:
         default: ghcr
         options:
           - ghcr
-          - ecr
+          - awsecr
           - gcp
   workflow_call:
     inputs:
@@ -21,7 +21,7 @@ on:
 jobs:
   Package-HelmCharts-for_GHRC:
     if: github.event.inputs.BUILD_ENV == 'ghcr'
-    name: Building at EC2
+    name: Package for GHRC
     environment: building_variables
     runs-on: [EC2-official-website-Linux]
     steps:
@@ -69,7 +69,7 @@ jobs:
           echo "awssecretkey=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
         } >> deployment/EC2/hosts
   Package-HelmCharts-for_ECR:
-    if: github.event.inputs.BUILD_ENV == 'ecr'
+    if: github.event.inputs.BUILD_ENV == 'awsecr'
     name: Building at ECS
     environment: building_variables
     runs-on: [ECS-official-website-Linux]
@@ -141,7 +141,7 @@ jobs:
         chmod 400 ec2.pem
         ansible-playbook -i hosts provision.yml
   Deploy_to_ECS:
-    if: github.event.inputs.BUILD_ENV == 'ecr'
+    if: github.event.inputs.BUILD_ENV == 'awsecr'
     environment: deploy_variables_for_dev
     needs: Build-push-from-ECS
     runs-on: [ECS-official-website-Linux]
