@@ -23,6 +23,7 @@ jobs:
     if: github.event.inputs.BUILD_ENV == 'ghcr'
     name: Package for GHRC
     environment: ${{ github.event.inputs.BUILD_ENV }}
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - name: Push Helm chart to OCI compatible registry (Github)
           uses: bsord/helm-push@4.2.0
@@ -52,6 +53,7 @@ jobs:
     if: github.event.inputs.BUILD_ENV == 'awsecr'
     name: Building at ECS
     environment: building_variables
+    runs-on: [self-hosted, Linux, X64]
     outputs:
       IMAGE: ${{ steps.cn-image.outputs.image }}
       OLD-IMAGE-ID: ${{ steps.cn-image.outputs.old-image-id }}
@@ -89,6 +91,7 @@ jobs:
   Deploy_to_EC2:
     if: github.event.inputs.BUILD_ENV == 'ec2'
     environment: deploy_variables_for_dev
+    runs-on: [self-hosted, Linux, X64]
     needs: Build-push-from-EC2
     steps:
     - name: Configure AWS credentials
@@ -121,6 +124,7 @@ jobs:
   Deploy_to_ECS:
     if: github.event.inputs.BUILD_ENV == 'awsecr'
     environment: deploy_variables_for_dev
+    runs-on: [self-hosted, Linux, X64]
     needs: Build-push-from-ECS
     steps:
     - name: Deploy to ECS
