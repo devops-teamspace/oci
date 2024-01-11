@@ -92,7 +92,7 @@ jobs:
     if: github.event.inputs.BUILD_ENV == 'ghcr'
     environment: deploy_variables_for_dev
     runs-on: [self-hosted, Linux, X64]
-    needs: Package-HelmCharts-for_GHR
+    needs: Package-HelmCharts-for_GHRC
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -121,27 +121,4 @@ jobs:
         echo '${{ secrets.PEM }}' > ec2.pem 
         chmod 400 ec2.pem
         ansible-playbook -i hosts provision.yml
-  Deploy_to_ECS:
-    if: github.event.inputs.BUILD_ENV == 'awsecr'
-    environment: deploy_variables_for_dev
-    runs-on: [self-hosted, Linux, X64]
-    needs: Build-push-from-ECS
-    steps:
-    - name: Deploy to ECS
-      shell: bash
-      run: |
-        ###########  remark terraform process ################
-        #       pushd infra/ECS/
-        #       terraform init
-        #       terraform validate
-        #       terraform plan
-        #       terraform apply -auto-approve
-        #       popd
-        go env GOPROXY=https://goproxy.cn
-        pre-commit run --all-files
-        echo "nuxt_public_api_base='NUXT_PUBLIC_API_BASE: https://webportal-cms-dev.xrspace.com.cn/api'"> ~/office-website-v2/env.yaml
-        pushd deployment/ECS/ || exit 1
-        export IMAGE='${{ needs.Build-push-from-ECS.outputs.IMAGE }}'
-        docker-compose down
-        docker-compose up -d
-        docker rmi '${{ needs.Build-push-from-ECS.outputs.OLD-IMAGE-ID }}'
+
