@@ -24,30 +24,30 @@ jobs:
     name: Package for GHRC
     environment: ${{ github.event.inputs.BUILD_ENV }}
     steps:
-    - name: Push Helm chart to OCI compatible registry (Github)
-      uses: bsord/helm-push@4.2.0
-      with:
-        useOCIRegistry: true
-        registry-url:  oci://ghcr.io/devops-teamspace
-        username: ${{ secrets.USERNAME }}
-        access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
-        force: true
-        chart-folder: chart
-    - name: Package, tag, and push tgz to GHCR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: "webportal-v2"
-        IMAGE_TAG: ${{ github.sha }}
-        DOCKER_BUILDKIT: True
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to EC2.
-        pre-commit run --all-files
-        pushd charts || exit 1
-        helm package ./guestbook
-        helm push ./guestbook-0.1.0.tgz oci://ghcr.io/devops-teamspace
-        popd
+      - name: Push Helm chart to OCI compatible registry (Github)
+          uses: bsord/helm-push@4.2.0
+          with:
+            useOCIRegistry: true
+            registry-url:  oci://ghcr.io/devops-teamspace
+            username: ${{ secrets.USERNAME }}
+            access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
+            force: true
+            chart-folder: chart
+      - name: Package, tag, and push tgz to GHCR
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: "webportal-v2"
+            IMAGE_TAG: ${{ github.sha }}
+            DOCKER_BUILDKIT: True
+          run: |
+            # Build a docker container and
+            # push it to ECR so that it can
+            # be deployed to EC2.
+            pre-commit run --all-files
+            pushd charts || exit 1
+            helm package ./guestbook
+            helm push ./guestbook-0.1.0.tgz oci://ghcr.io/devops-teamspace
+            popd
   Package-HelmCharts-for_ECR:
     if: github.event.inputs.BUILD_ENV == 'awsecr'
     name: Building at ECS
