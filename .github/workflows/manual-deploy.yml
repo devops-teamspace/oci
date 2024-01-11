@@ -5,7 +5,7 @@ on:
     inputs:
       TARGET_BRANCH:
         description: "The target branch"
-        default: ""
+        default: "guestbook"
         type: string
   workflow_dispatch: # deploy on demand
     inputs:
@@ -20,17 +20,17 @@ on:
         type: choice  # drop-down menus are fantastic!
         required: true
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
-        - "bare-metal"
-        - "test"
+        - "ghcr"
+        - "awsecr"
         - "production" 
-        default: "test"
+        default: "ghcr"
       runner_namespace:
         description: "Which namespace to deploy to?"
         type: choice
         required: true
         options:  # again, change this to your own namespaces
         - "runners"
-        - "test-runners"
+        - "test"
         default: "test-runners"
 
 jobs:
