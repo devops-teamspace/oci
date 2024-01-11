@@ -25,6 +25,10 @@ jobs:
     environment: ${{ github.event.inputs.BUILD_ENV }}
     runs-on: [self-hosted, Linux, X64]
     steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.TARGET_BRANCH || '' }}
+        ssh-key: ${{ secrets.ECS_SSH_PRIVATE_KEY }}
     - name: Push Helm chart to OCI compatible registry (Github)
       uses: bsord/helm-push@develop
       with:
