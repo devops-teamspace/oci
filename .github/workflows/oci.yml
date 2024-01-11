@@ -37,7 +37,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
         force: true
-        chart-folder: chart
+        chart-folder: charts
     - name: Package, tag, and push tgz to GHCR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -48,7 +48,6 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to EC2.
-        pre-commit run --all-files
         pushd charts || exit 1
         helm package ./guestbook
         helm push ./guestbook-0.1.0.tgz oci://ghcr.io/devops-teamspace
@@ -67,7 +66,6 @@ jobs:
         ref: ${{ inputs.TARGET_BRANCH || '' }}
         ssh-key: ${{ secrets.ECS_SSH_PRIVATE_KEY }}
     - name: Login to AlibabaCloud ACR Build, tag, and push image to Aliyun ACR
-      id: cn-image
       env:
         IMAGE_TAG: ${{ github.sha }}
         ACR_REGISTRY: "registry.cn-shenzhen.aliyuncs.com/xrspace-server"
