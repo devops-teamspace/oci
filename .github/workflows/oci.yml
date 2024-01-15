@@ -19,7 +19,7 @@ on:
         type: string
 
 jobs:
-  Package-HelmCharts-for_GHRC:
+  Package-Helm-for-GHRC:
     if: github.event.inputs.BUILD_ENV == 'ghcr'
     name: Package for GHRC
     environment: ${{ github.event.inputs.BUILD_ENV }}
