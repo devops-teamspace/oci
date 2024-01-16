@@ -2,7 +2,7 @@ name: Push various oci helm-charts
 on:
   workflow_dispatch:
     inputs:
-      BUILD_ENV:
+      Build_Env:
         description: 'The target build environment'
         required: true
         type: choice
@@ -11,7 +11,6 @@ on:
           - ghcr
           - awsecr
           - gcp
-    inputs:
       Package_Name:
         description: 'Select package name'
         required: true
@@ -32,9 +31,9 @@ on:
 
 jobs:
   Package-Helm-for-GHRC:
-    if: github.event.inputs.BUILD_ENV == 'ghcr'
+    if: github.event.inputs.Build_Env == 'ghcr'
     name: Package for GHRC
-    environment: ${{ github.event.inputs.BUILD_ENV }}
+    environment: ${{ github.event.inputs.Build_Env }}
     runs-on: [self-hosted, Linux, X64]
     steps:
     - uses: actions/checkout@v4
@@ -49,4 +48,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
         force: true
-        chart-folder: charts/${{ github.event.inputs.BUILD_ENV }}
+        chart-folder: charts/${{ github.event.inputs.Build_Env }}
