@@ -9,9 +9,19 @@ on:
         default: ghcr
         options:
           - ghcr
-          - guestbook
           - awsecr
           - gcp
+    inputs:
+      Package_Name:
+        description: 'Select package name'
+        required: true
+        type: choice
+        default: guestbook
+        options:
+          - guestbook
+          - grafana
+          - kube-prometheus
+
   workflow_call:
     inputs:
       TARGET_BRANCH:
