@@ -13,8 +13,14 @@ on:
         # In this repository, this corresponds to the helm chart name in `/deployments/helm-***.yml`.
         # e.g., `ubi8` would target `/deployments/helm-ubi8.yml`
         description: "Which scale set to deploy?"
-        type: string
+        default: "guestbook"
+        type: choice
         required: true
+        options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
+        - "guestbook"
+        - "grafana"
+        - "argo-cd" 
+        - "kube-prometheus" 
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
         description: "Which environment to deploy to?"
         type: choice  # drop-down menus are fantastic!
@@ -38,29 +44,21 @@ jobs:
     runs-on: ubuntu-latest # use the GitHub hosted runners to deploy the self-hosted runners in GHEC
     # If using GHES or GHAE, use another deployment, such as having CentOS redeploy Ubuntu and vice versa
     environment: ${{ github.event.inputs.environment_name }}
+    - name: Login to GHCR
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
+    - name: Publish chart
+      env:
+        HELM_EXPERIMENTAL_OCI: '1'
+        CHARTS_REPO: ghcr.io/devops-teamespace
+        VERSION: ${{ github.ref_name }}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.TARGET_BRANCH || '' }}
+     - name: Update deployment (using latest chart of actions-runner-controller-charts/auto-scaling-runner-set)
+       run: |
+         helm install "${{ github.event.inputs.target_scale_set }}" \
+         --namespace "${{ github.event.inputs.runner_namespace }}" \
+         oci://ghcr.io/devops-teamspace
 
-      - name: Write out the kubeconfig info
-        run: |
-          echo ${{ secrets.DEPLOY_ACCOUNT }} | base64 -d > /tmp/config
-
-      - name: Update deployment (using latest chart of actions-runner-controller-charts/auto-scaling-runner-set)
-        run: |
-          helm install ${{ github.event.inputs.target_scale_set }} \
-          --namespace "${{ github.event.inputs.runner_namespace }}" \
-          --set githubConfigSecret.github_app_id="${{ vars.ARC_APP_ID }}" \
-          --set githubConfigSecret.github_app_installation_id="${{ vars.ARC_INSTALL_ID }}" \
-          --set githubConfigSecret.github_app_private_key="${{ secrets.ARC_APP_PRIVATE_KEY }}" \
-          -f deployments/helm-${{ github.event.inputs.target_scale_set }}.yml \
-          oci://ghcr.io/actions/actions-runner-controller-charts/auto-scaling-runner-set
-
-        env:
-          KUBECONFIG: /tmp/config
-
-      - name: Remove kubeconfig info
-        run: rm -f /tmp/config
