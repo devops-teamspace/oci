@@ -20,6 +20,7 @@ on:
         options:
           - guestbook
           - grafana
+          - argo-cd
           - kube-prometheus
 
   workflow_call:
