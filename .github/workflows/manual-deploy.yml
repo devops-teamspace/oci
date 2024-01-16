@@ -5,8 +5,7 @@ on:
     inputs:
       TARGET_BRANCH:
         description: "The target branch"
-        default: "TFI-304-Research-the-number-and-owners-of-code-reviews"
-        required: false
+        default: ""
         type: string
   workflow_dispatch: # deploy on demand
     inputs:
