@@ -9,6 +9,7 @@ on:
         default: ghcr
         options:
           - ghcr
+          - guestbook
           - awsecr
           - gcp
   workflow_call:
@@ -37,4 +38,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
         force: true
-        chart-folder: charts/guestbook
+        chart-folder: charts/${{ github.event.inputs.BUILD_ENV }}
