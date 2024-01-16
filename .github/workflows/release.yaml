@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish-charts:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     steps:
     - name: Set up Helm
       uses: azure/setup-helm@v3
@@ -18,16 +18,13 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
-        username: ${{ secrets.GH_USERNAME }}
-        password: ${{ secrets.GH_TOKEN }}
-   
-    - name: Checkout code
-      uses: actions/checkout@v3
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
     
     - name: Publish chart
       env:
         HELM_EXPERIMENTAL_OCI: '1'
-        CHARTS_REPO: ghcr.io/morey-tech/example-private-helm-oci
+        CHARTS_REPO: ghcr.io/devops-teamespace
         VERSION: ${{ github.ref_name }}
       run: |
         CHART_VERSION=$(echo $VERSION | cut -c 2-)
