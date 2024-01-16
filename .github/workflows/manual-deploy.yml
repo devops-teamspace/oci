@@ -56,8 +56,6 @@ jobs:
         HELM_EXPERIMENTAL_OCI: '1'
         CHARTS_REPO: ghcr.io/devops-teamespace
         VERSION: ${{ github.ref_name }}
-
-    - name: Update deployment (using latest chart of actions-runner-controller-charts/auto-scaling-runner-set)
       run: |
         helm install "${{ github.event.inputs.target_scale_set }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" \
