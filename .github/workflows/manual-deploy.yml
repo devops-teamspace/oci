@@ -1,4 +1,4 @@
-name: 🐝 Manually deploy runners
+name: Manually deploy runners
 
 on:
   workflow_call:
@@ -37,7 +37,7 @@ on:
         options:  # again, change this to your own namespaces
         - "runners"
         - "test"
-        default: "test-runners"
+        default: "test"
 
 jobs:
   Deploy:
@@ -54,7 +54,8 @@ jobs:
         CHARTS_REPO: ghcr.io/devops-teamespace
         VERSION: ${{ github.ref_name }}
       run: |
+        CHART_VERSION=$(echo $VERSION | cut -c 2-)
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
         helm install "${{ github.event.inputs.target_scale_set }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" \
-        oci://ghcr.io/devops-teamspace
+        oci://$(CHARTS_REPO) --version 0.1.0
