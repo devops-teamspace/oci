@@ -48,4 +48,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
         force: true
-        chart-folder: charts/${{ github.event.inputs.Build_Env }}
+        chart-folder: charts/${{ github.event.inputs.Package_Name }}
