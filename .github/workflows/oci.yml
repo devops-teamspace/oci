@@ -9,9 +9,19 @@ on:
         default: ghcr
         options:
           - ghcr
-          - guestbook
           - awsecr
           - gcp
+    inputs:
+      Package_Name: 
+        description: 'Select package name'
+        required: true
+        type: choice
+        default: questbook
+        options:
+          - guestbook
+          - grafana
+          - argo-cd
+          - kube-prometheus
   workflow_call:
     inputs:
       TARGET_BRANCH:
@@ -38,4 +48,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
         force: true
-        chart-folder: charts/${{ github.event.inputs.BUILD_ENV }}
+        chart-folder: charts/${{ github.event.inputs.Package_Name }}
