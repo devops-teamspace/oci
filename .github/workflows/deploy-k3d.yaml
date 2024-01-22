@@ -54,7 +54,7 @@ jobs:
         cluster-name: "test-cluster-1"
         args: >-
           --agents 1
-          --image docker.io/rancher/k3s:v1.20.4-k3s1
+          --image docker.io/rancher/k3s:v1.28.6-rc2-k3s1-amd64
     - name: Publish chart
       env:
         USERNAME: "${{ secrets.USERNAME }}"
