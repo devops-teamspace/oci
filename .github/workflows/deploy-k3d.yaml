@@ -52,7 +52,9 @@ jobs:
       uses: AbsaOSS/k3d-action@v2.4.0
       with:
         cluster-name: "test-cluster-1"
-        args: --agents 1
+        args: >-
+          --agents 1
+          --image docker.io/rancher/k3s:v1.20.4-k3s1
     - name: Publish chart
       env:
         USERNAME: "${{ secrets.USERNAME }}"
