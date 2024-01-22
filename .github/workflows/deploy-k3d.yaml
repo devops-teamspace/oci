@@ -49,7 +49,7 @@ jobs:
     - name: "Create Sinle Cluster"
       env:
         SUDO_ASKPASS: "~/pass"
-      uses: AbsaOSS/k3d-action@v2
+      uses: AbsaOSS/k3d-action@v2.4.0
       with:
         cluster-name: "test-cluster-1"
         args: --agents 1
