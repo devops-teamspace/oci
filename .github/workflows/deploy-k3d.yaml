@@ -49,6 +49,8 @@ jobs:
     - uses: AbsaOSS/k3d-action@v2
       name: "Create Sinle Cluster"
       env:
+        ACTIONS_RUNNER_DEBUG: true
+        ACTIONS_STEP_DEBUG: true
         SUDO_ASKPASS: "~/pass"
       with:
         cluster-name: "test-cluster-1"
