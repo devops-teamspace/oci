@@ -7,6 +7,9 @@ on:
         description: "The target branch"
         default: ""
         type: string
+env:
+  ACTIONS_RUNNER_DEBUG: true
+  ACTIONS_STEP_DEBUG: true
   workflow_dispatch: # deploy on demand
     inputs:
       target_scale_set:  # name our runner set
@@ -51,15 +54,11 @@ on:
         helm install "${{ github.event.inputs.target_scale_set }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" \
         --create-namespace $CHARTS_REPO --version 0.1.0
-env:
-  ACTIONS_RUNNER_DEBUG: true
-  ACTIONS_STEP_DEBUG: true
 jobs:
   Deploy:
     runs-on: [ubuntu] # use the GitHub hosted runners to deploy the self-hosted runners in GHEC
     # If using GHES or GHAE, use another deployment, such as having CentOS redeploy Ubuntu and vice versa
     environment: ${{ github.event.inputs.environment_name }}
-
     steps:
     - uses: AbsaOSS/k3d-action@v2
       name: "Create Sinle Cluster"
