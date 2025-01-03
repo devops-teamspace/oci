@@ -46,10 +46,10 @@ jobs:
     environment: ${{ github.event.inputs.environment_name }}
 
     steps:
-    - name: "Create Sinle Cluster"
+    - uses: AbsaOSS/k3d-action@v2.4.0
+      name: "Create Sinle Cluster"
       env:
         SUDO_ASKPASS: "~/pass"
-      uses: AbsaOSS/k3d-action@v2.4.0
       with:
         cluster-name: "test-cluster-1"
         args: >-
