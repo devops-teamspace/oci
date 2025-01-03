@@ -7,9 +7,6 @@ on:
         description: "The target branch"
         default: ""
         type: string
-env:
-  ACTIONS_RUNNER_DEBUG: true
-  ACTIONS_STEP_DEBUG: true
   workflow_dispatch: # deploy on demand
     inputs:
       target_scale_set:  # name our runner set
