@@ -38,19 +38,9 @@ on:
         - "runners"
         - "test"
         default: "test"
-    - name: Publish chart
-      env:
-        USERNAME: "${{ secrets.USERNAME }}"
-        GITHUB_TOKEN_REGISTRY: "${{ secrets.REGISTRY_ACCESS_TOKEN }}"
-        CHARTS_REPO: "oci://ghcr.io/devops-teamspace/${{ github.event.inputs.target_scale_set }}"
-        VERSION: ${{ github.ref_name }}
-        HELM_EXPERIMENTAL_OCI: '1'
-      run: |
-        CHART_VERSION=$(echo $VERSION | cut -c 2-)
-        echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
-        helm install "${{ github.event.inputs.target_scale_set }}" \
-        --namespace "${{ github.event.inputs.runner_namespace }}" \
-        --create-namespace $CHARTS_REPO --version 0.1.0
+env:
+  ACTIONS_RUNNER_DEBUG: true
+  ACTIONS_STEP_DEBUG: true
 jobs:
   Deploy:
     runs-on: [ubuntu] # use the GitHub hosted runners to deploy the self-hosted runners in GHEC
