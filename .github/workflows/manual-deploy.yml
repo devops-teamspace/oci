@@ -36,6 +36,7 @@ on:
         required: true
         options:  # again, change this to your own namespaces
         - "runners"
+        - "argo-cd"
         - "test"
         default: "test"
 
