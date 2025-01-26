@@ -43,7 +43,7 @@ jobs:
       uses: bsord/helm-push@v4.2.0
       with:
         useOCIRegistry: true
-        registry-url:  oci://ghcr.io/devops-teamspace
+        registry-url:  oci://ghcr.io/devops-teamspace/oci
         username: ${{ secrets.USERNAME }}
         access-token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
         force: true
