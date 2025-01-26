@@ -43,7 +43,7 @@ env:
   ACTIONS_STEP_DEBUG: true
 jobs:
   Deploy:
-    runs-on: [ubuntu] # use the GitHub hosted runners to deploy the self-hosted runners in GHEC
+    runs-on: [self-hosted, Linux, X64] # use the GitHub hosted runners to deploy the self-hosted runners in GHEC
     # If using GHES or GHAE, use another deployment, such as having CentOS redeploy Ubuntu and vice versa
     environment: ${{ github.event.inputs.environment_name }}
     steps:
