@@ -1,22 +1,17 @@
-{{- if .Values.crds.install }}
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  annotations:
-    {{- if .Values.crds.keep }}
-    "helm.sh/resource-policy": keep
-    {{- end }}
-    {{- with .Values.crds.annotations }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
+  generation: 1
   labels:
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: applicationsets.argoproj.io
     app.kubernetes.io/part-of: argocd
-    {{- with .Values.crds.additionalLabels }}
-      {{- toYaml . | nindent 4}}
-    {{- end }}
   name: applicationsets.argoproj.io
+  resourceVersion: "3286"
+  uid: 6eb18cb7-5358-4734-939d-b149cb372700
 spec:
+  conversion:
+    strategy: None
   group: argoproj.io
   names:
     kind: ApplicationSet
@@ -16300,4 +16295,25 @@ spec:
     storage: true
     subresources:
       status: {}
-{{- end }}
+status:
+  acceptedNames:
+    kind: ApplicationSet
+    listKind: ApplicationSetList
+    plural: applicationsets
+    shortNames:
+    - appset
+    - appsets
+    singular: applicationset
+  conditions:
+  - lastTransitionTime: "2025-01-19T07:34:49Z"
+    message: no conflicts found
+    reason: NoConflicts
+    status: "True"
+    type: NamesAccepted
+  - lastTransitionTime: "2025-01-19T07:34:49Z"
+    message: the initial names have been accepted
+    reason: InitialNamesAccepted
+    status: "True"
+    type: Established
+  storedVersions:
+  - v1alpha1
