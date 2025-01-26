@@ -59,4 +59,4 @@ jobs:
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
         helm install "${{ github.event.inputs.target_scale_set }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" \
-        $CHARTS_REPO --version "v2.13.3"
+        $CHARTS_REPO --version 7.7.16
