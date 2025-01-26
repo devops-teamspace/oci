@@ -1,0 +1,50 @@
+apiVersion: v1
+entries:
+  argo-cd:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Added conditional around argocd-tls-certs-cm.yaml helm creation
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.13.3
+    created: "2025-01-27T02:12:11.49025101+08:00"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.29.4
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: b0b544e22caec314bc0924fdd082e69ae5b16dc1c52165d9618c0dc37a9919e2
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - https://devops-teamspace.github.io/oci/argo-cd-7.7.16.tgz
+    version: 7.7.16
+  guestbook:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2025-01-27T02:12:11.490755267+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 873ed49f4b8e32b44aeb110740af946c99b1c6ec057abdf2b569d7a1b9a0b321
+    name: guestbook
+    type: application
+    urls:
+    - https://devops-teamspace.github.io/oci/guestbook-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-01-27T02:12:11.473039918+08:00"
