@@ -21,6 +21,7 @@ on:
         - "grafana"
         - "argo-cd" 
         - "kube-prometheus" 
+        - "cert-manager"
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
         description: "Which environment to deploy to?"
         type: choice  # drop-down menus are fantastic!
@@ -37,6 +38,7 @@ on:
         options:  # again, change this to your own namespaces
         - "runners"
         - "argo-cd"
+        - "cert-manager"
         - "test"
         default: "test"
 
@@ -59,4 +61,4 @@ jobs:
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
         helm install "${{ github.event.inputs.target_scale_set }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" \
-        $CHARTS_REPO --version 7.7.16
+        $CHARTS_REPO
