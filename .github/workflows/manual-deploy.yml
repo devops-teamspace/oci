@@ -60,5 +60,5 @@ jobs:
         CHART_VERSION=$(echo $(helm show chart ./charts/${{ github.event.inputs.target_scale_set }} | grep '^version:' | cut -d ' ' -f2))
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
         helm install "${{ github.event.inputs.target_scale_set }}" \
-        --namespace "${{ github.event.inputs.runner_namespace }}" \
+        --namespace "${{ github.event.inputs.runner_namespace }}" --create-namespace \
         $CHARTS_REPO --version $CHART_VERSION
