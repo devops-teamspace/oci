@@ -57,8 +57,8 @@ jobs:
         VERSION: ${{ github.ref_name }}
         HELM_EXPERIMENTAL_OCI: '1'
       run: |
-        CHART_VERSION=$(echo $VERSION | cut -c 2-)
+        CHART_VERSION=$(echo $(helm show chart ./charts/${{ github.event.inputs.target_scale_set }} | grep '^version:' | cut -d ' ' -f2))
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
         helm install "${{ github.event.inputs.target_scale_set }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" \
-        $CHARTS_REPO --version v1.16.3
+        $CHARTS_REPO --version $CHART_VERSION
