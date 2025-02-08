@@ -9,6 +9,15 @@ on:
         type: string
   workflow_dispatch: # deploy on demand
     inputs:
+      cluster_name:  # We set up the environment for our cluster.
+        description: "Which cluster to deploy to?"
+        type: choice  # drop-down menus are fantastic!
+        required: true
+        options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
+        - "argocd"
+        - "test-cluster-1"
+        - "production" 
+        default: "argocd"
       target_scale_set:  # name our runner set
         # In this repository, this corresponds to the helm chart name in `/deployments/helm-***.yml`.
         # e.g., `ubi8` would target `/deployments/helm-ubi8.yml`
@@ -21,6 +30,7 @@ on:
         - "grafana"
         - "argo-cd" 
         - "kube-prometheus" 
+        - "cert-manager"
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
         description: "Which environment to deploy to?"
         type: choice  # drop-down menus are fantastic!
@@ -37,6 +47,7 @@ on:
         options:  # again, change this to your own namespaces
         - "runners"
         - "argo-cd"
+        - "cert-manager"
         - "test"
         default: "test"
 
@@ -47,6 +58,26 @@ jobs:
     environment: ${{ github.event.inputs.environment_name }}
 
     steps:
+    - name: Check if K3d cluster exists
+      id: check-cluster
+      run: |
+        if k3d cluster list | grep -q ${{ github.event.inputs.cluster_name }}; then
+          echo "Cluster already exists."
+          echo "EXISTS=true" >> $GITHUB_ENV
+        else
+          echo "Cluster does not exist."
+          echo "EXISTS=false" >> $GITHUB_ENV
+        fi
+    - name: Create K3d cluster (if not exists)
+      if: env.EXISTS == 'false'
+      uses: AbsaOSS/k3d-action@v2
+      with:
+        cluster-name: ${{ github.event.inputs.cluster_name }}
+        args: >-
+          --agents 1
+    - name: Ensure kubeconfig is set to the correct cluster
+      run: |
+        kubectl config use-context k3d-${{ github.event.inputs.cluster_name }}
     - name: Publish chart
       env:
         USERNAME: "${{ secrets.USERNAME }}"
@@ -55,8 +86,8 @@ jobs:
         VERSION: ${{ github.ref_name }}
         HELM_EXPERIMENTAL_OCI: '1'
       run: |
-        CHART_VERSION=$(echo $VERSION | cut -c 2-)
+        CHART_VERSION=$(echo $(helm show chart ./charts/${{ github.event.inputs.target_scale_set }} | grep '^version:' | cut -d ' ' -f2))
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
         helm install "${{ github.event.inputs.target_scale_set }}" \
-        --namespace "${{ github.event.inputs.runner_namespace }}" \
-        $CHARTS_REPO --version 7.7.16
+        --namespace "${{ github.event.inputs.runner_namespace }}" --create-namespace \
+        $CHARTS_REPO --version $CHART_VERSION
