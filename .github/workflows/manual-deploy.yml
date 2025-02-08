@@ -68,10 +68,7 @@ jobs:
           --agents 1
     - name: Ensure kubeconfig is set to the correct cluster
       run: |
-        k3d kubeconfig merge test-cluster-1 --kubeconfig-switch-context
         kubectl config use-context k3d-test-cluster-1
-      env:
-        KUBECONFIG: ~/.kube/config
     - name: Publish chart
       env:
         USERNAME: "${{ secrets.USERNAME }}"
