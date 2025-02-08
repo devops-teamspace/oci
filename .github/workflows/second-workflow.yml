@@ -1,4 +1,4 @@
-name: push helm-packages
+name: push helm-packages second-workflow
 on:
   workflow_run:
     workflows: ["Package helm-charts (Manual)"]
