@@ -28,7 +28,7 @@ on:
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
         - "guestbook"
         - "grafana"
-        - "argocd" 
+        - "argo-cd" 
         - "kube-prometheus" 
         - "cert-manager"
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
@@ -46,8 +46,8 @@ on:
         required: true
         options:  # again, change this to your own namespaces
         - "runners"
-        - "argo-cd"
-        - "cert-manager"
+        - "argocd"
+        - "certmanager"
         - "test"
         default: "test"
 
