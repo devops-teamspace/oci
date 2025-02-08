@@ -1,4 +1,4 @@
-name: Deploy helm-packages to k3d (Manual)
+name: Deploy helm-packages (Manual)
 
 on:
   workflow_call:
