@@ -1,12 +1,11 @@
+name: push helm-packages
 on:
   workflow_run:
     workflows: ["Package helm-charts (Manual)"]
     types:
       - completed
-
 jobs:
   notify:
-    name: push helm-packages
     runs-on: [self-hosted, Linux, X64]
     steps:
       - name: Print deployment info
