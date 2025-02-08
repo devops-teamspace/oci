@@ -80,7 +80,7 @@ jobs:
     - name: Ensure kubeconfig is set to the correct cluster
       run: |
         kubectl config use-context k3d-${{ github.event.inputs.cluster_name }}
-    - name: Publish chart
+    - name: Publish helm-chart [${{ github.event.inputs.helm-chart_name }}] 
       env:
         USERNAME: "${{ secrets.USERNAME }}"
         GITHUB_TOKEN_REGISTRY: "${{ secrets.REGISTRY_ACCESS_TOKEN }}"
