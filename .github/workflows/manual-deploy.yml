@@ -72,6 +72,7 @@ jobs:
       if: env.EXISTS == 'false'
       uses: AbsaOSS/k3d-action@v2
       with:
+        k3d-version: v5.8.1
         cluster-name: ${{ github.event.inputs.cluster_name }}
         args: >-
           --agents 1
