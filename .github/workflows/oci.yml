@@ -1,4 +1,4 @@
-name: Package helm-charts for oci (Manual)
+name: Package helm-charts (Manual)
 on:
   workflow_dispatch:
     inputs:
