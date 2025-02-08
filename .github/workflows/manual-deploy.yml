@@ -49,8 +49,6 @@ jobs:
     environment: ${{ github.event.inputs.environment_name }}
 
     steps:
-    - name: "Create Sinle Cluster"
-      uses: AbsaOSS/k3d-action@v2
     - name: Check if K3d cluster exists
       id: check-cluster
       run: |
