@@ -58,7 +58,7 @@ jobs:
     environment: ${{ github.event.inputs.environment_name }}
 
     steps:
-    - name: Check if K3d cluster exists
+    - name: Check if K3d cluster [${{ github.event.inputs.cluster_name }}] exists
       id: check-cluster
       run: |
         if k3d cluster list | grep -q ${{ github.event.inputs.cluster_name }}; then
@@ -68,7 +68,7 @@ jobs:
           echo "Cluster does not exist."
           echo "EXISTS=false" >> $GITHUB_ENV
         fi
-    - name: Create K3d cluster (if not exists)
+    - name: Create K3d cluster [${{ github.event.inputs.cluster_name }}] (if not exists)
       if: env.EXISTS == 'false'
       uses: AbsaOSS/k3d-action@v2
       with:
