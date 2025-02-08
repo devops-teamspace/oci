@@ -1,4 +1,4 @@
-name: Manually deploy runners
+name: Deploy helm-packages to k3d (Manual)
 
 on:
   workflow_call:

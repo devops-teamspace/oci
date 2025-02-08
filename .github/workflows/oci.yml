@@ -1,4 +1,4 @@
-name: Push helm-charts to oci 
+name: Push helm-charts to oci (Manual)
 on:
   workflow_dispatch:
     inputs:
