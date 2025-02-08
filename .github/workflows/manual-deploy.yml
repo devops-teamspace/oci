@@ -28,7 +28,7 @@ on:
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
         - "guestbook"
         - "grafana"
-        - "argo-cd" 
+        - "argocd" 
         - "kube-prometheus" 
         - "cert-manager"
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
@@ -83,7 +83,7 @@ jobs:
       env:
         USERNAME: "${{ secrets.USERNAME }}"
         GITHUB_TOKEN_REGISTRY: "${{ secrets.REGISTRY_ACCESS_TOKEN }}"
-        CHARTS_REPO: "oci://ghcr.io/devops-teamspace/oci/${{ github.event.inputs.target_scale_set }}"
+        CHARTS_REPO: "oci://ghcr.io/devops-teamspace/${{ github.event.inputs.target_scale_set }}"
         VERSION: ${{ github.ref_name }}
         HELM_EXPERIMENTAL_OCI: '1'
       run: |
