@@ -49,6 +49,31 @@ jobs:
     environment: ${{ github.event.inputs.environment_name }}
 
     steps:
+    - name: "Create Sinle Cluster"
+      uses: AbsaOSS/k3d-action@v2
+    - name: Check if K3d cluster exists
+      id: check-cluster
+      run: |
+        if k3d cluster list | grep -q "test-cluster-1"; then
+          echo "Cluster already exists."
+          echo "EXISTS=true" >> $GITHUB_ENV
+        else
+          echo "Cluster does not exist."
+          echo "EXISTS=false" >> $GITHUB_ENV
+        fi
+    - name: Create K3d cluster (if not exists)
+      if: env.EXISTS == 'false'
+      uses: AbsaOSS/k3d-action@v2
+      with:
+        cluster-name: "test-cluster-1"
+        args: >-
+          --agents 1
+    - name: Ensure kubeconfig is set to the correct cluster
+      run: |
+        k3d kubeconfig merge test-cluster-1 --kubeconfig-switch-context
+        kubectl config use-context k3d-test-cluster-1
+      env:
+        KUBECONFIG: ~/.kube/config
     - name: Publish chart
       env:
         USERNAME: "${{ secrets.USERNAME }}"
