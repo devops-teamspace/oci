@@ -30,7 +30,7 @@ on:
         type: string
 
 jobs:
-  Helm-push to oci:
+  Package:
     if: github.event.inputs.Build_Env == 'ghcr'
     name: Push helm-package [${{ github.event.inputs.Package_Name }}]
     environment: ${{ github.event.inputs.Build_Env }}
