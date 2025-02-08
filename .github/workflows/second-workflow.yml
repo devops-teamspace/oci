@@ -1,0 +1,12 @@
+on:
+  workflow_run:
+    workflows: ["Package helm-charts (Manual)"]
+    types:
+      - completed
+
+jobs:
+  notify:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: Print deployment info
+        run: echo "Deployment run by ${{ github.actor }} with version ${{ github.event.workflow_run.conclusion }}"
