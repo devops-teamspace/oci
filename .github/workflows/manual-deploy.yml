@@ -9,6 +9,15 @@ on:
         type: string
   workflow_dispatch: # deploy on demand
     inputs:
+      cluster_name:  # We set up the environment for our cluster.
+        description: "Which cluster to deploy to?"
+        type: choice  # drop-down menus are fantastic!
+        required: true
+        options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
+        - "argocd"
+        - "test-cluster-1"
+        - "production" 
+        default: "argocd"
       target_scale_set:  # name our runner set
         # In this repository, this corresponds to the helm chart name in `/deployments/helm-***.yml`.
         # e.g., `ubi8` would target `/deployments/helm-ubi8.yml`
@@ -52,7 +61,7 @@ jobs:
     - name: Check if K3d cluster exists
       id: check-cluster
       run: |
-        if k3d cluster list | grep -q "test-cluster-1"; then
+        if k3d cluster list | grep -q ${{ github.event.inputs.cluster_name }}; then
           echo "Cluster already exists."
           echo "EXISTS=true" >> $GITHUB_ENV
         else
@@ -63,12 +72,12 @@ jobs:
       if: env.EXISTS == 'false'
       uses: AbsaOSS/k3d-action@v2
       with:
-        cluster-name: "test-cluster-1"
+        cluster-name: ${{ github.event.inputs.cluster_name }}
         args: >-
           --agents 1
     - name: Ensure kubeconfig is set to the correct cluster
       run: |
-        kubectl config use-context k3d-test-cluster-1
+        kubectl config use-context k3d-${{ github.event.inputs.cluster_name }}
     - name: Publish chart
       env:
         USERNAME: "${{ secrets.USERNAME }}"
