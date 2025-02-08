@@ -18,7 +18,7 @@ on:
         - "test-cluster-1"
         - "production" 
         default: "argocd"
-      target_scale_set:  # name our runner set
+      helm-chart_name:  # name our runner set
         # In this repository, this corresponds to the helm chart name in `/deployments/helm-***.yml`.
         # e.g., `ubi8` would target `/deployments/helm-ubi8.yml`
         description: "Which scale set to deploy?"
@@ -53,6 +53,7 @@ on:
 
 jobs:
   Deploy:
+    name: Deploy [${{ github.event.inputs.helm-chart_name }}] on cluster [${{ github.event.inputs.cluster_name }}]
     runs-on: [self-hosted, Linux, X64] # use the GitHub hosted runners to deploy the self-hosted runners in GHEC
     # If using GHES or GHAE, use another deployment, such as having CentOS redeploy Ubuntu and vice versa
     environment: ${{ github.event.inputs.environment_name }}
@@ -83,12 +84,12 @@ jobs:
       env:
         USERNAME: "${{ secrets.USERNAME }}"
         GITHUB_TOKEN_REGISTRY: "${{ secrets.REGISTRY_ACCESS_TOKEN }}"
-        CHARTS_REPO: "oci://ghcr.io/devops-teamspace/${{ github.event.inputs.target_scale_set }}"
+        CHARTS_REPO: "oci://ghcr.io/devops-teamspace/${{ github.event.inputs.helm-chart_name }}"
         VERSION: ${{ github.ref_name }}
         HELM_EXPERIMENTAL_OCI: '1'
       run: |
-        CHART_VERSION=$(echo $(helm show chart ./charts/${{ github.event.inputs.target_scale_set }} | grep '^version:' | cut -d ' ' -f2))
+        CHART_VERSION=$(echo $(helm show chart ./charts/${{ github.event.inputs.helm-chart_name }} | grep '^version:' | cut -d ' ' -f2))
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
-        helm install "${{ github.event.inputs.target_scale_set }}" \
+        helm install "${{ github.event.inputs.helm-chart_name }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" --create-namespace \
         $CHARTS_REPO --version $CHART_VERSION
