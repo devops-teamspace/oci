@@ -76,7 +76,8 @@ jobs:
         k3d-version: v5.8.1
         cluster-name: ${{ github.event.inputs.cluster_name }}
         args: >-
-          --agents 1
+          --agents 2
+          --api-port "localhost:$(shuf -i 10000-65535 -n 1)
     - name: Ensure kubeconfig is set to the correct cluster
       run: |
         kubectl config use-context k3d-${{ github.event.inputs.cluster_name }}
