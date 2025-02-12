@@ -42,7 +42,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain: argocd.example.com
+  domain: argocd.devops.taipei
 
   # -- Runtime class name for all components
   runtimeClassName: ""
@@ -2063,29 +2063,29 @@ server:
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
-    enabled: false
+    enabled: true
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
-    domain: ""
+    domain: "argocd.devops.taipei"
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
     # @default -- `""` (defaults to 2160h = 90d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    duration: ""
+    duration: "2160h"   # 證書的有效期，這裡設為 90 天
     # -- How long before the expiry a certificate should be renewed.
     # @default -- `""` (defaults to 360h = 15d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    renewBefore: ""
+    renewBefore: "360h" # 設置證書過期前 15 天進行續期
     # Certificate issuer
     ## Ref: https://cert-manager.io/docs/concepts/issuer
     issuer:
       # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
-      group: ""
+      group: "cert-manager.io" 
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
-      kind: ""
+      kind: "ClusterIssuer"
       # -- Certificate issuer name. Eg. `letsencrypt`
-      name: ""
+      name: "letsencrypt-dev"
     # Private key of the certificate
     privateKey:
       # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`
@@ -2108,7 +2108,7 @@ server:
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificateSecret:
     # -- Create argocd-server-tls secret
-    enabled: false
+    enabled: true
     # -- Annotations to be added to argocd-server-tls secret
     annotations: {}
     # -- Labels to be added to argocd-server-tls secret
@@ -2140,7 +2140,7 @@ server:
     servicePortHttpsName: https
     # -- Server service https port appProtocol
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol
-    servicePortHttpsAppProtocol: ""
+    #servicePortHttpsAppProtocol: ""
     # -- The class of the load balancer implementation
     loadBalancerClass: ""
     # -- LoadBalancer will get created with the IP specified in this field
@@ -2156,7 +2156,7 @@ server:
     externalTrafficPolicy: Cluster
     # -- Used to maintain session affinity. Supports `ClientIP` and `None`
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
-    sessionAffinity: None
+    sessionAffinity: ClientIP
 
   ## Server metrics service configuration
   metrics:
@@ -2229,7 +2229,7 @@ server:
     labels: {}
     # -- Additional ingress annotations
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
-    annotations: {}
+    annotations:
       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
@@ -2249,7 +2249,7 @@ server:
     # -- Enable TLS configuration for the hostname defined at `server.ingress.hostname`
     ## TLS certificate will be retrieved from a TLS secret `argocd-server-tls`
     ## You can create this secret via `certificate` or `certificateSecret` option
-    tls: false
+    tls: true
 
     # -- The list of additional hostnames to be covered by ingress record
     # @default -- `[]` (See [values.yaml])
@@ -2286,10 +2286,6 @@ server:
     # -- Additional TLS configuration
     # @default -- `[]` (See [values.yaml])
     extraTls: []
-      # - hosts:
-      #   - argocd.example.com
-      #   secretName: your-certificate-name
-
     # AWS specific options for Application Load Balancer
     # Applies only when `serv.ingress.controller` is set to `aws`
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#aws-application-load-balancers-albs-and-classic-elb-http-mode
@@ -2340,15 +2336,16 @@ server:
     # -- Enable an ingress resource for the Argo CD server for dedicated [gRPC-ingress]
     enabled: false
     # -- Additional ingress annotations for dedicated [gRPC-ingress]
-    annotations: {}
+    annotations: 
+      cert-manager.io/cluster-issuer: "letsencrypt-dev"
     # -- Additional ingress labels for dedicated [gRPC-ingress]
     labels: {}
     # -- Defines which ingress controller will implement the resource [gRPC-ingress]
-    ingressClassName: ""
+    ingressClassName: "traefik"
 
     # -- Argo CD server hostname for dedicated [gRPC-ingress]
     # @default -- `""` (defaults to grpc.`server.ingress.hostname`)
-    hostname: ""
+    hostname: "argocd.devops.taipei"
 
     # -- Argo CD server ingress path for dedicated [gRPC-ingress]
     path: /
@@ -2394,10 +2391,10 @@ server:
 
     # -- Additional TLS configuration for dedicated [gRPC-ingress]
     # @default -- `[]` (See [values.yaml])
-    extraTls: []
-      # - secretName: your-certificate-name
-      #   hosts:
-      #     - argocd.example.com
+    extraTls: 
+      - secretName: argo-cd-argocd-server
+        hosts:
+          - argocd.devops.taipei
 
   # Create a OpenShift Route with SSL passthrough for UI and CLI
   # Consider setting 'hostname' e.g. https://argocd.apps-crc.testing/ using your Default Ingress Controller Domain
@@ -3087,26 +3084,26 @@ applicationSet:
     enabled: false
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
-    domain: ""
+    domain: "argocd.devops.taipei"
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
     # @default -- `""` (defaults to 2160h = 90d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    duration: ""
+    duration: "2160h"
     # -- How long before the expiry a certificate should be renewed.
     # @default -- `""` (defaults to 360h = 15d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    renewBefore: ""
+    renewBefore: "360h"
     # Certificate issuer
     ## Ref: https://cert-manager.io/docs/concepts/issuer
     issuer:
       # -- Certificate issuer group. Set if using an external issuer. Eg. `cert-manager.io`
-      group: ""
+      group: "cert-manager.io"
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
-      kind: ""
+      kind: "ClusterIssuer"
       # -- Certificate issuer name. Eg. `letsencrypt`
-      name: ""
+      name: "letsencrypt"
     # Private key of the certificate
     privateKey:
       # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`

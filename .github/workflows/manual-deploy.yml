@@ -77,6 +77,7 @@ jobs:
         cluster-name: ${{ github.event.inputs.cluster_name }}
         args: >-
           --agents 2
+          --env "TZ=Asia/Taipei@all"
           --port "80:80@loadbalancer" --port "443:443@loadbalancer"
           --api-port "localhost:$(shuf -i 10000-65535 -n 1)"
     - name: Ensure kubeconfig is set to the correct cluster
