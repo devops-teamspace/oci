@@ -157,7 +157,9 @@ global:
     #   maxUnavailable: 25%
 
   # -- Environment variables to pass to all deployed Deployments
-  env: []
+  env:
+    - name: TZ
+      value: "Asia/Taipei"
 
   # -- Annotations for the all deployed Certificates
   certificateAnnotations: {}
@@ -279,7 +281,7 @@ configs:
     ## Server properties
     # -- Run server without TLS
     ## NOTE: This value should be set when you generate params by other means as it changes ports used by ingress template.
-    server.insecure: false
+    server.insecure: true
     # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
     server.basehref: /
     # -- Used if Argo CD is running behind reverse proxy under subpath different from /
@@ -2097,7 +2099,8 @@ server:
       # -- Key bit size of the private key. If algorithm is set to `Ed25519`, size is ignored.
       size: 2048
     # -- Annotations to be applied to the Server Certificate
-    annotations: {}
+    annotations: 
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
     # -- Usages for the certificate
     ### Ref: https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.KeyUsage
     usages: []
@@ -2108,7 +2111,7 @@ server:
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificateSecret:
     # -- Create argocd-server-tls secret
-    enabled: true
+    enabled: false
     # -- Annotations to be added to argocd-server-tls secret
     annotations: {}
     # -- Labels to be added to argocd-server-tls secret
@@ -2217,11 +2220,11 @@ server:
     labels: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: true
-
   # Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
     enabled: true
+    https: false
     # -- Specific implementation for ingress controller. One of `generic`, `aws` or `gke`
     ## Additional configuration might be required in related configuration sections
     controller: generic
@@ -2230,6 +2233,8 @@ server:
     # -- Additional ingress annotations
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
     annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    # traefik.ingress.kubernetes.io/router.middlewares: redirect-to-https@kube-system
       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
@@ -2337,7 +2342,7 @@ server:
     enabled: false
     # -- Additional ingress annotations for dedicated [gRPC-ingress]
     annotations: 
-      cert-manager.io/cluster-issuer: "letsencrypt-dev"
+    # cert-manager.io/cluster-issuer: "letsencrypt-dev"
     # -- Additional ingress labels for dedicated [gRPC-ingress]
     labels: {}
     # -- Defines which ingress controller will implement the resource [gRPC-ingress]
@@ -2355,7 +2360,7 @@ server:
 
     # -- Enable TLS configuration for the hostname defined at `server.ingressGrpc.hostname`
     ## TLS certificate will be retrieved from a TLS secret with name: `argocd-server-grpc-tls`
-    tls: false
+    tls: true
 
     # -- The list of additional hostnames to be covered by ingress record
     # @default -- `[]` (See [values.yaml])
@@ -2391,10 +2396,10 @@ server:
 
     # -- Additional TLS configuration for dedicated [gRPC-ingress]
     # @default -- `[]` (See [values.yaml])
-    extraTls: 
-      - secretName: argo-cd-argocd-server
-        hosts:
-          - argocd.devops.taipei
+    extraTls: []
+    # - secretName: argo-cd-argocd-server
+    #   hosts:
+    #     - argocd.devops.taipei
 
   # Create a OpenShift Route with SSL passthrough for UI and CLI
   # Consider setting 'hostname' e.g. https://argocd.apps-crc.testing/ using your Default Ingress Controller Domain
@@ -3103,7 +3108,7 @@ applicationSet:
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
       kind: "ClusterIssuer"
       # -- Certificate issuer name. Eg. `letsencrypt`
-      name: "letsencrypt"
+      name: "letsencrypt-dev"
     # Private key of the certificate
     privateKey:
       # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`
@@ -3468,6 +3473,7 @@ notifications:
 
   cm:
     # -- Whether helm chart creates notifications controller config map
+    url: "https://argocd.devops.taipei"
     create: true
 
   ## Enable this and set the rules: to whatever custom rules you want for the Cluster Role resource.

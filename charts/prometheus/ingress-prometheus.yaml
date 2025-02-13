@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus-server-ingress
+  namespace: lens-metrics
+  annotations:
+    spec.ingressClassName: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-dev"
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: prometheus.devops.taipei
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - prometheus.devops.taipei
+    secretName: prometheus-tls

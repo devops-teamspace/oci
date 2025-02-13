@@ -300,7 +300,9 @@ extraArgs: []
 #  extraEnv:
 #  - name: SOME_VAR
 #    value: 'some value'
-extraEnv: []
+extraEnv:
+- name: TZ
+  value: "Asia/Taipei"
 
 # Resources to provide to the cert-manager controller pod.
 #

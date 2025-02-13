@@ -8,7 +8,8 @@ image:
   repository: gcr.io/heptio-images/ks-guestbook-demo
   tag: 0.1
   pullPolicy: IfNotPresent
-
+env:
+  TZ: "Asia/Taipei"  # 默认时区
 service:
   type: ClusterIP
   port: 80

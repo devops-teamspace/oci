@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: imap-server-ingress
+  namespace: test
+  annotations:
+    spec.ingressClassName: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-dev"
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: imap.devops.taipei
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: guestbook
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - imap.devops.taipei
+    secretName: imap-tls
