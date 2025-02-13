@@ -5,8 +5,8 @@ on:
     inputs:
       TARGET_BRANCH:
         description: "The target branch"
-        default: ""
         type: string
+        required: false
   workflow_dispatch: # deploy on demand
     inputs:
       cluster_name:  # We set up the environment for our cluster.
