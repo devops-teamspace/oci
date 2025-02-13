@@ -6,25 +6,26 @@ on:
       TARGET_BRANCH:
         description: "The target branch"
         type: string
-        required: false
+        required: true
+        default: "main"
   workflow_dispatch: # deploy on demand
     inputs:
       cluster_name:  # We set up the environment for our cluster.
         description: "Which cluster to deploy to?"
         type: choice  # drop-down menus are fantastic!
         required: true
+        default: "lab"
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
         - "argocd"
         - "lab"
         - "production" 
-        default: "lab"
       helm-chart_name:  # name our runner set
         # In this repository, this corresponds to the helm chart name in `/deployments/helm-***.yml`.
         # e.g., `ubi8` would target `/deployments/helm-ubi8.yml`
         description: "Which scale set to deploy?"
-        default: "guestbook"
         type: choice
         required: true
+        default: "kube-prometheus-stack"
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
         - "cert-manager"
         - "guestbook"
@@ -32,27 +33,26 @@ on:
         - "argo-cd" 
         - "kube-prometheus" 
         - "kube-prometheus-stack"
-        default: "kube-prometheus-stack"
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
         description: "Which environment to deploy to?"
         type: choice  # drop-down menus are fantastic!
         required: true
+        default: "ghcr"
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
         - "ghcr"
         - "awsecr"
         - "production" 
-        default: "ghcr"
       runner_namespace:
         description: "Which namespace to deploy to?"
         type: choice
         required: true
+        default: "kubestack"
         options:  # again, change this to your own namespaces
         - "runners"
         - "argocd"
         - "certmanager"
         - "kubestack"
         - "test"
-        default: "kubestack"
 
 jobs:
   Deploy:
