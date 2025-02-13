@@ -15,9 +15,9 @@ on:
         required: true
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
         - "argocd"
-        - "test-cluster-1"
+        - "kubestack"
         - "production" 
-        default: "argocd"
+        default: "kubestack"
       helm-chart_name:  # name our runner set
         # In this repository, this corresponds to the helm chart name in `/deployments/helm-***.yml`.
         # e.g., `ubi8` would target `/deployments/helm-ubi8.yml`
@@ -26,11 +26,13 @@ on:
         type: choice
         required: true
         options:  # change these to your own names or change :point_up: to a `string` for freeform entry.
+        - "cert-manager"
         - "guestbook"
         - "grafana"
         - "argo-cd" 
         - "kube-prometheus" 
-        - "cert-manager"
+        - "kube-prometheus-stack"
+        default: "kube-prometheus-stack"
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
         description: "Which environment to deploy to?"
         type: choice  # drop-down menus are fantastic!
@@ -48,8 +50,9 @@ on:
         - "runners"
         - "argocd"
         - "certmanager"
+        - "kubestack"
         - "test"
-        default: "test"
+        default: "kubestack"
 
 jobs:
   Deploy:
