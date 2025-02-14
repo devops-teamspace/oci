@@ -77,7 +77,8 @@ jobs:
         if [ "${{ github.event.inputs.cluster_name }}" == "production" ]; then
           echo "PORT_ARGS=--port \"192.168.50.161:80:80@loadbalancer\" --port \"192.168.50.161:443:443@loadbalancer\"" >> $GITHUB_ENV
         else
-          LAST_CHAR="${{ github.event.inputs.cluster_name }:(-1)}"
+          CLUSTER_NAME="${{ github.event.inputs.cluster_name }}"
+          LAST_CHAR="${CLUSTER_NAME: -1}"  # 提取最後一個字元
           echo "PORT_ARGS=--port \"192.168.50.219:808${LAST_CHAR}:80@loadbalancer\" --port \"192.168.50.219:${LAST_CHAR}443:443@loadbalancer\"" >> $GITHUB_ENV
         fi
 
