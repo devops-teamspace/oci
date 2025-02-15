@@ -75,7 +75,7 @@ jobs:
     - name: Set port args based on cluster_name
       run: |
         if [ "${{ github.event.inputs.cluster_name }}" == "production" ]; then
-          echo "PORT_ARGS=--port \"192.168.50.219:80:8080@loadbalancer\" --port \"192.168.50.219:443:8443@loadbalancer\"" >> $GITHUB_ENV
+          echo "PORT_ARGS=--port \"192.168.50.219:8080:80@loadbalancer\" --port \"192.168.50.219:8443:443@loadbalancer\"" >> $GITHUB_ENV
         else
           CLUSTER_NAME="${{ github.event.inputs.cluster_name }}"
           LAST_CHAR="${CLUSTER_NAME: -1}"  # 提取最後一個字元
