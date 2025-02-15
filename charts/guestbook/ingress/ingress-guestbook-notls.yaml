@@ -18,7 +18,3 @@ spec:
             name: guestbook
             port:
               number: 80
-  tls:
-  - hosts:
-    - guestbook.devops.taipei
-    secretName: letsencrypt-tls  # 這個 Secret 需要由 Certbot 手動管理
