@@ -75,11 +75,11 @@ jobs:
     - name: Set port args based on cluster_name
       run: |
         if [ "${{ github.event.inputs.cluster_name }}" == "production" ]; then
-          echo "PORT_ARGS=--port \"192.168.50.219:4080:80@loadbalancer\" --port \"192.168.50.219:4443:443@loadbalancer\"" >> $GITHUB_ENV
+          echo "PORT_ARGS=--port \"192.168.50.161:4080:80@loadbalancer\" --port \"192.168.50.161:4443:443@loadbalancer\"" >> $GITHUB_ENV
         else
           CLUSTER_NAME="${{ github.event.inputs.cluster_name }}"
           LAST_CHAR="${CLUSTER_NAME: -1}"  # 提取最後一個字元
-          echo "PORT_ARGS=--port \"192.168.50.219:${LAST_CHAR}080:80@loadbalancer\" --port \"192.168.50.219:${LAST_CHAR}443:443@loadbalancer\"" >> $GITHUB_ENV
+          echo "PORT_ARGS=--port \"192.168.50.161:${LAST_CHAR}080:80@loadbalancer\" --port \"192.168.50.161:${LAST_CHAR}443:443@loadbalancer\"" >> $GITHUB_ENV
         fi
 
     - name: Create K3d cluster [${{ github.event.inputs.cluster_name }}] (if not exists)
