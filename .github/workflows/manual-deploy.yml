@@ -108,6 +108,6 @@ jobs:
       run: |
         CHART_VERSION=$(echo $(helm show chart ./charts/${{ github.event.inputs.helm-chart_name }} | grep '^version:' | cut -d ' ' -f2))
         echo $GITHUB_TOKEN_REGISTRY | helm registry login ghcr.io/devops-teamspace --username $USERNAME --password-stdin
-        helm install "${{ github.event.inputs.helm-chart_name }}" \
+        helm upgrade -i "${{ github.event.inputs.helm-chart_name }}" \
         --namespace "${{ github.event.inputs.runner_namespace }}" --create-namespace \
         $CHARTS_REPO --version $CHART_VERSION
