@@ -21,4 +21,4 @@ spec:
   tls:
   - hosts:
     - guestbook.devops.taipei
-    secretName: letsencrypt-tls  # 這個 Secret 需要由 Certbot 手動管理
+    secretName: guestbook-tls-secret  # 這個 Secret 需要由 Certbot 手動管理

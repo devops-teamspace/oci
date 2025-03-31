@@ -31,7 +31,6 @@ on:
         - "guestbook"
         - "grafana"
         - "argo-cd" 
-        - "kube-prometheus" 
         - "kube-prometheus-stack"
       environment_name:  # this corresponds to the environments we set up for our `kubeconfig` files
         description: "Which environment to deploy to?"

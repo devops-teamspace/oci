@@ -5,7 +5,7 @@ metadata:
   namespace: lens-metrics
   annotations:
     spec.ingressClassName: "traefik"
-    cert-manager.io/cluster-issuer: "letsencrypt-dev"
+    cert-manager.io/cluster-issuer: "letsencrypt-dns"
 spec:
   ingressClassName: traefik
   rules:
@@ -22,4 +22,4 @@ spec:
   tls:
   - hosts:
     - prometheus.devops.taipei
-    secretName: prometheus-tls
+    secretName: prometheus-tls-secret

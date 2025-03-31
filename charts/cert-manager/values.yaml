@@ -11,8 +11,6 @@ global:
   #  imagePullSecrets:
   #    - name: "image-pull-secret"
   imagePullSecrets: []
-
-  # Labels to apply to all resources.
   # Please note that this does not add labels to the resources created dynamically by the controllers.
   # For these resources, you have to add the labels in the template in the cert-manager custom resource:
   # For example, podTemplate/ ingressTemplate in ACMEChallengeSolverHTTP01Ingress
@@ -66,6 +64,8 @@ global:
     # renewal of a leadership.
     # +docs:property
     # retryPeriod: 15s
+cloudflare:
+  apiToken: ""
 
 # This option is equivalent to setting crds.enabled=true and crds.keep=true.
 # Deprecated: use crds.enabled and crds.keep instead.
@@ -74,7 +74,7 @@ installCRDs: false
 crds:
   # This option decides if the CRDs should be installed
   # as part of the Helm installation.
-  enabled: true
+  enabled: false
 
   # This option makes it so that the "helm.sh/resource-policy": keep
   # annotation is added to the CRD. This will prevent Helm from uninstalling

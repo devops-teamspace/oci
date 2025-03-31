@@ -21,7 +21,7 @@ on:
           - cert-manager
           - grafana
           - argo-cd
-          - kube-prometheus
+          - kube-prometheus-stack
   workflow_call:
     inputs:
       TARGET_BRANCH:
